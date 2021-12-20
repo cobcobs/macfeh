@@ -1,4 +1,6 @@
 # macfeh
+(this is a personal fix of the original macfeh https://raw.githubusercontent.com/DrabWeb/macfeh, tested and found working on xcode 11.3.1, macOS 10.14.6)
+
 
 ![Screenshot](https://raw.githubusercontent.com/DrabWeb/macfeh/master/screenshot.png)
 
