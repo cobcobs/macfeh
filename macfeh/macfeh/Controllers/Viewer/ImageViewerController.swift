@@ -70,33 +70,39 @@ class ImageViewerController: NSViewController, NSWindowDelegate {
 
                     let mainScreenSize: NSSize = NSScreen.main!.frame.size;
 
-                    // if the image is larger than the screen, scale it down to fit the screen while maintaining aspect ratio
-                    // if not, set the window to be the same size as the image
-                    if mainScreenSize.width < imagePixelSize.width || mainScreenSize.height < imagePixelSize.height {
-                        let padding: CGFloat = 200;
-                        let aspectRatio = imagePixelSize.width / imagePixelSize.height;
-                        let newWindowWidth = aspectRatio * (mainScreenSize.height - padding);
-
-                        self.window!.setFrame(NSRect(x: self.window!.frame.origin.x,
-                                                     y: self.window!.frame.origin.y,
-                                                     width: newWindowWidth,
-                                                     height: (mainScreenSize.height - padding)),
-                                                     display: false);
-                    }
-                    else {
+                    // if image is smaller than screen ; if image width < screen width AND image height < screen height;
+                    if imagePixelSize.width < mainScreenSize.width && imagePixelSize.height < mainScreenSize.height {
                         self.window!.setFrame(NSRect(x: self.window!.frame.origin.x,
                                                      y: self.window!.frame.origin.y,
                                                      width: imagePixelSize.width,
                                                      height: imagePixelSize.height),
                                                      display: false);
-                    }
+                        // for some reason, small images get zoomed out. this readjusts the already small image back to its original size
+                        self.zoomToActualSize();
 
+                    }
+                    // if image isn't smaller than screen, it is larger. fix height at 600px, let width adapt
+                    else {
+                        // aspect ratio (image width) : (image height)
+                        let aspectRatio = imagePixelSize.width / imagePixelSize.height;
+                        // fix the new macfeh window height must maintain ratio and a certain size
+                        let newWindowHeight: CGFloat = 250;
+                        let newWindowWidth = aspectRatio * newWindowHeight;
+
+                        self.window!.setFrame(NSRect(x: self.window!.frame.origin.x,
+                                                     y: self.window!.frame.origin.y,
+                                                     width: newWindowWidth,
+                                                     height: newWindowHeight),
+                                                     display: false);
+                        
+                    }
                     self.window!.title = NSString(string: atPath).lastPathComponent;
 
                     self.showBackground((NSApp.delegate as! AppDelegate).preferences.viewerDefaultsShowBackground);
                     self.showShadow((NSApp.delegate as! AppDelegate).preferences.viewerDefaultsEnableShadow);
 
                     self.representedImage = image;
+                    
                 }
             }
             else {

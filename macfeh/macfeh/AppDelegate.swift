@@ -72,6 +72,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         preferencesLoaded = true;
     }
 
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        return true;
+    }
+    
     func applicationWillTerminate(_ aNotification: Notification) {
         preferences.save();
     }
